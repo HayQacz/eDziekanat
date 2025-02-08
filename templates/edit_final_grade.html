@@ -1,0 +1,26 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Edycja oceny końcowej</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.subject_name.label_tag }}<br>
+            {{ form.subject_name }}
+        </div>
+        <div class="mb-3">
+            {{ form.ects.label_tag }}<br>
+            {{ form.ects }}
+        </div>
+        <div class="mb-3">
+            {{ form.row_color.label_tag }}<br>
+            {{ form.row_color }}
+        </div>
+        <h4>Przypisane oceny cząstkowe</h4>
+        <div class="mb-3">
+            {{ form.partial_grades }}
+        </div>
+        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+    </form>
+</div>
+{% endblock %}

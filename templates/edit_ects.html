@@ -1,0 +1,11 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Ustaw ECTS dla przedmiotu: {{ final_grade.subject_name }}</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Zapisz</button>
+    </form>
+</div>
+{% endblock %}
