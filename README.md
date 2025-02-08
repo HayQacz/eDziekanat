@@ -14,6 +14,10 @@ Strona Edziekanatu to aplikacja webowa stworzona w Django, umożliwiająca stude
   - Responsywny interfejs oparty o Bootstrap.
   - Przełącznik Dark/Light mode dostępny w pasku nawigacyjnym.
   - Dedykowane style dla ciemnego motywu.
+    ![image](https://github.com/user-attachments/assets/3b17e801-ce38-4e60-8600-38ae220c715f)
+    ![image](https://github.com/user-attachments/assets/bfab063c-c45c-48ff-b1b8-1c8841a9c4d6)
+    ![image](https://github.com/user-attachments/assets/41eb6f16-b3b2-412b-bf61-9adc9eea6891)
+
 
 - **Inne funkcjonalności:**
   - Strona logowania. 
@@ -25,3 +29,6 @@ Strona Edziekanatu to aplikacja webowa stworzona w Django, umożliwiająca stude
 - Django 4.x
 - Bootstrap 4 (wczytywany przez CDN)
 - Font Awesome (wczytywany przez CDN)
+
+
+
