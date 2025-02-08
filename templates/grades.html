@@ -17,9 +17,9 @@
         </thead>
         <tbody>
             {% for fg in final_grades %}
-                <tr style="background-color: {{ fg.row_color|default:'#ffffff' }}">
+                <tr class="final-grade-row" style="background-color: {{ fg.row_color|default:'#ffffff' }}; color: #000000; font-weight: bold;">
                     <td>{{ fg.subject_name }}</td>
-                    <td><strong>Ocena końcowa</strong></td>
+                    <td>Ocena końcowa</td>
                     <td>1.0</td>
                     <td colspan="3">{{ fg.final_value }}</td>
                     <td>{{ fg.ects }}</td>

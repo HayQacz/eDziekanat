@@ -9,18 +9,65 @@ body.dark-theme {
     color: #f8f9fa;
 }
 
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5,
+body.dark-theme h6,
+body.dark-theme p,
+body.dark-theme li,
+body.dark-theme span,
+body.dark-theme a,
+body.dark-theme label,
+body.dark-theme .form-control,
+body.dark-theme .card,
+body.dark-theme .list-group-item {
+    color: #f8f9fa !important;
+    background-color: transparent;
+}
+
+body.dark-theme a {
+    color: #f8f9fa;
+}
+body.dark-theme a:hover {
+    color: #ffffff;
+}
+
 .navbar-dark .navbar-nav .nav-link {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.85);
 }
 .navbar-dark .navbar-nav .nav-link:hover {
-    color: rgba(255, 255, 255, 1);
+    color: #ffffff;
+}
+
+body.dark-theme table,
+body.dark-theme th,
+body.dark-theme td {
+    color: #f8f9fa !important;
+    background-color: transparent;
 }
 
 .card {
     border: none;
     border-radius: 10px;
 }
-
 .container {
     margin-top: 20px;
 }
+
+body.dark-theme .btn-primary {
+    background-color: #0069d9;
+    border-color: #0062cc;
+    color: #ffffff;
+}
+body.dark-theme .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+}
+.final-grade-row {
+    color: #000000 !important;
+    font-weight: bold !important;
+}
+
