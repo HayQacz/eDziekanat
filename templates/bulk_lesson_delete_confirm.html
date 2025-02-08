@@ -1,0 +1,47 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Potwierdź usunięcie zajęć</h2>
+  {% if lessons %}
+    <p>Poniższe zajęcia zostaną usunięte:</p>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Godzina</th>
+          <th>Przedmiot</th>
+          <th>Forma</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lesson in lessons %}
+        <tr>
+          <td>{{ lesson.date|date:"d.m.Y" }}</td>
+          <td>{{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}</td>
+          <td>{{ lesson.final_grade.subject_name }}</td>
+          <td>{{ lesson.get_lesson_type_display }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="final_grade" value="{{ params.final_grade }}">
+      <input type="hidden" name="lesson_type" value="{{ params.lesson_type }}">
+      <input type="hidden" name="start_date" value="{{ params.start_date|date:'Y-m-d' }}">
+      <input type="hidden" name="end_date" value="{{ params.end_date|date:'Y-m-d' }}">
+      <input type="hidden" name="day_of_week" value="{{ params.day_of_week }}">
+      {% if params.every_two_weeks %}
+        <input type="hidden" name="every_two_weeks" value="on">
+      {% endif %}
+      <button type="submit" name="confirm" class="btn btn-danger">
+        Potwierdź usunięcie
+      </button>
+      <a href="{% url 'bulk_lesson_delete' %}" class="btn btn-secondary">Anuluj</a>
+    </form>
+  {% else %}
+    <p class="text-muted">Nie znaleziono zajęć spełniających kryteria.</p>
+    <a href="{% url 'bulk_lesson_delete' %}" class="btn btn-secondary">Powrót</a>
+  {% endif %}
+</div>
+{% endblock %}
