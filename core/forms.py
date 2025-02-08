@@ -1,5 +1,6 @@
 ﻿from django.forms import CheckboxSelectMultiple
 from django import forms
+from django.db.models import Sum
 from .models import PartialGrade, FinalGrade, FORM_CHOICES, GRADE_CHOICES
 
 
@@ -16,7 +17,9 @@ class PartialGradeForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.final_grade = kwargs.pop('final_grade', None)
         super().__init__(*args, **kwargs)
+
         self.fields['attempt2'].required = False
         self.fields['attempt3'].required = False
         original_choices_2 = [choice for choice in self.fields['attempt2'].choices if choice[0] != '']
@@ -29,10 +32,25 @@ class PartialGradeForm(forms.ModelForm):
         attempt1 = cleaned_data.get('attempt1')
         attempt2 = cleaned_data.get('attempt2')
         attempt3 = cleaned_data.get('attempt3')
+
         if attempt2 and attempt2 != '' and not (attempt1 and attempt1 != ''):
             self.add_error('attempt2', 'Nie można ustawić oceny w drugim terminie, jeśli pierwszy termin jest pusty.')
         if attempt3 and attempt3 != '' and not (attempt2 and attempt2 != ''):
             self.add_error('attempt3', 'Nie można ustawić oceny w trzecim terminie, jeśli drugi termin jest pusty.')
+
+        if self.final_grade is not None:
+            qs = PartialGrade.objects.filter(final_grade=self.final_grade)
+            if self.instance and self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            existing_sum = qs.aggregate(total=Sum('weight'))['total'] or 0.0
+            try:
+                new_weight = float(cleaned_data.get('weight', 0.0))
+            except (ValueError, TypeError):
+                new_weight = 0.0
+            if existing_sum + new_weight > 1.0:
+                self.add_error('weight',
+                               'Suma wag ocen cząstkowych nie może być większa niż 1.0. Obecnie suma wynosi {:.2f}.'.format(
+                                   existing_sum + new_weight))
         return cleaned_data
 
 

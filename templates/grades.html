@@ -28,20 +28,57 @@
                     </td>
                 </tr>
                 {% for pg in fg.partialgrade_set.all %}
-                    <tr>
-                        <td>{{ fg.subject_name }}</td>
-                        <td>{{ pg.get_form_display }}</td>
-                        <td>{{ pg.weight }}</td>
-                        <td>{{ pg.attempt1 }}</td>
-                        <td>{{ pg.attempt2 }}</td>
-                        <td>{{ pg.attempt3 }}</td>
-                        <td></td>
-                        <td>
-                            <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
-                            <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
-                        </td>
-                    </tr>
+                    {% if pg.form == "wyklad" %}
+                        <tr>
+                            <td>{{ fg.subject_name }}</td>
+                            <td>{{ pg.get_form_display }}</td>
+                            <td>{{ pg.weight }}</td>
+                            <td>{{ pg.attempt1 }}</td>
+                            <td>{{ pg.attempt2 }}</td>
+                            <td>{{ pg.attempt3 }}</td>
+                            <td></td>
+                            <td>
+                                <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
+                                <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
+                {% for pg in fg.partialgrade_set.all %}
+                    {% if pg.form == "laboratoria" %}
+                        <tr>
+                            <td>{{ fg.subject_name }}</td>
+                            <td>{{ pg.get_form_display }}</td>
+                            <td>{{ pg.weight }}</td>
+                            <td>{{ pg.attempt1 }}</td>
+                            <td>{{ pg.attempt2 }}</td>
+                            <td>{{ pg.attempt3 }}</td>
+                            <td></td>
+                            <td>
+                                <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
+                                <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% for pg in fg.partialgrade_set.all %}
+                    {% if pg.form == "audytoria" %}
+                        <tr>
+                            <td>{{ fg.subject_name }}</td>
+                            <td>{{ pg.get_form_display }}</td>
+                            <td>{{ pg.weight }}</td>
+                            <td>{{ pg.attempt1 }}</td>
+                            <td>{{ pg.attempt2 }}</td>
+                            <td>{{ pg.attempt3 }}</td>
+                            <td></td>
+                            <td>
+                                <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
+                                <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if fg.weight_sum|floatformat:"1" != "1.0" %}
                 <tr>
                     <td colspan="8" class="text-center">
                         <a href="{% url 'add_partial_grade' fg.id %}" class="btn btn-success btn-sm">
@@ -49,6 +86,7 @@
                         </a>
                     </td>
                 </tr>
+                {% endif %}
             {% empty %}
                 <tr>
                     <td colspan="8" class="text-center">Brak ocen.</td>

@@ -3,7 +3,6 @@ from django.db import models
 
 GRADE_CHOICES = [
     ('2.0', '2.0'),
-    ('2.5', '2.5'),
     ('3.0', '3.0'),
     ('3.5', '3.5'),
     ('4.0', '4.0'),
@@ -92,9 +91,17 @@ class FinalGrade(models.Model):
                 self.save()
                 return
 
+        valid_partials = [pg for pg in partials if (pg.attempt1 or pg.attempt2 or pg.attempt3)]
+
+        total_weight_sum = sum(pg.weight for pg in valid_partials)
+        if abs(total_weight_sum - 1.0) > 0.001:
+            self.final_value = ''
+            self.save()
+            return
+
         total_weight = 0.0
         weighted_sum = 0.0
-        for pg in partials:
+        for pg in valid_partials:
             grade_value = None
             if pg.attempt1:
                 grade_value = pg.attempt1
