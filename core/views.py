@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import FinalGrade, PartialGrade
+from .models import FinalGrade, PartialGrade, Lesson
 from django.db.models import Sum
-from .forms import PartialGradeForm, FinalGradeECTSForm, CombinedGradeForm, FinalGradeEditForm
+from .forms import PartialGradeForm, FinalGradeECTSForm, CombinedGradeForm, FinalGradeEditForm, LessonForm
 from django.contrib.auth import authenticate, login
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
 @login_required
 def home(request):
     news = [
@@ -153,3 +157,76 @@ def custom_login(request):
         else:
             error_message = "Nie udało się zalogować, błędny indeks lub hasło."
     return render(request, 'login.html', {'error_message': error_message})
+def schedule_week(request):
+    # Pobranie daty z parametrów GET lub użycie dzisiejszej daty
+    date_str = request.GET.get('date')
+    if date_str:
+        try:
+            current_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            current_date = datetime.date.today()
+    else:
+        current_date = datetime.date.today()
+
+    # Obliczenie poniedziałku bieżącego tygodnia
+    start_of_week = current_date - datetime.timedelta(days=current_date.weekday())
+    week_dates = [start_of_week + datetime.timedelta(days=i) for i in range(7)]
+
+    # Filtrowanie zajęć na podstawie grupy użytkownika
+    lessons = Lesson.objects.filter(group=request.user.semester_group)
+    # Grupujemy zajęcia według dnia tygodnia (0: Poniedziałek, … 6: Niedziela)
+    lessons_by_day = {i: [] for i in range(7)}
+    for lesson in lessons:
+        lessons_by_day[lesson.day_of_week].append(lesson)
+
+    context = {
+        'week_dates': week_dates,
+        'lessons_by_day': lessons_by_day,
+        'start_of_week': start_of_week,
+        'end_of_week': start_of_week + datetime.timedelta(days=6),
+        'previous_week': start_of_week - datetime.timedelta(days=7),
+        'next_week': start_of_week + datetime.timedelta(days=7),
+    }
+    return render(request, 'schedule_week.html', context)
+
+def schedule_day(request, day):
+    # 'day' w formacie YYYY-MM-DD
+    try:
+        day_date = datetime.datetime.strptime(day, '%Y-%m-%d').date()
+    except ValueError:
+        day_date = datetime.date.today()
+    weekday = day_date.weekday()  # 0: Poniedziałek, ... 6: Niedziela
+
+    lessons = Lesson.objects.filter(group=request.user.semester_group, day_of_week=weekday)
+    context = {
+        'day_date': day_date,
+        'lessons': lessons,
+    }
+    return render(request, 'schedule_day.html', context)
+
+class LessonCreateView(CreateView):
+    model = Lesson
+    form_class = LessonForm
+    template_name = 'schedule_form.html'
+    success_url = reverse_lazy('schedule_week')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+class LessonUpdateView(UpdateView):
+    model = Lesson
+    form_class = LessonForm
+    template_name = 'schedule_form.html'
+    success_url = reverse_lazy('schedule_week')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+class LessonDeleteView(DeleteView):
+    model = Lesson
+    template_name = 'schedule_confirm_delete.html'
+    success_url = reverse_lazy('schedule_week')

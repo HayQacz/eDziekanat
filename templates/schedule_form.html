@@ -1,0 +1,12 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>{% if form.instance.pk %}Edytuj zajęcia{% else %}Dodaj zajęcia{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+    <a href="{% url 'schedule_week' %}" class="btn btn-secondary">Anuluj</a>
+  </form>
+</div>
+{% endblock %}

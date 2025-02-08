@@ -1,7 +1,7 @@
 ﻿from django.forms import CheckboxSelectMultiple
 from django import forms
 from django.db.models import Sum
-from .models import PartialGrade, FinalGrade, FORM_CHOICES, GRADE_CHOICES
+from .models import PartialGrade, FinalGrade, FORM_CHOICES, GRADE_CHOICES, Lesson
 
 
 class PartialGradeForm(forms.ModelForm):
@@ -139,3 +139,28 @@ class FinalGradeEditForm(forms.ModelForm):
                         pg.final_grade = instance
                         pg.save()
         return instance
+class LessonForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        # Zamiast 'day_of_week' używamy 'date'
+        fields = [
+            'final_grade',
+            'date',
+            'start_time',
+            'end_time',
+            'lesson_type',
+            'mandatory',
+            'additional_info',
+            'group'
+        ]
+        widgets = {
+            'date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'start_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+            'end_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(LessonForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['final_grade'].queryset = user.finalgrade_set.all()

@@ -1,0 +1,48 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2>Zajęcia na dzień: {{ day_date|date:"d.m.Y" }}</h2>
+  <a href="{% url 'schedule_week' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-secondary mb-3">Powrót do tygodnia</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Godzina rozpoczęcia</th>
+        <th>Godzina zakończenia</th>
+        <th>Przedmiot</th>
+        <th>Forma</th>
+        <th>Obowiązkowe</th>
+        <th>Informacje</th>
+        <th>Akcje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lesson in lessons %}
+      <tr style="background-color:
+            {% if lesson.lesson_type == 'wykład' %}#ffcccc
+            {% elif lesson.lesson_type == 'laboratoria' %}#ccffcc
+            {% elif lesson.lesson_type == 'audytoria' %}#ccccff
+            {% elif lesson.lesson_type == 'kolokwium' %}#ffffcc
+            {% elif lesson.lesson_type == 'kolokwium poprawkowe' %}#ffccff
+            {% elif lesson.lesson_type == 'zaliczenie' %}#ccffff
+            {% elif lesson.lesson_type == 'zaliczenie poprawkowe' %}#f0f0f0
+            {% else %}#ffffff{% endif %};">
+        <td>{{ lesson.start_time|time:"H:i" }}</td>
+        <td>{{ lesson.end_time|time:"H:i" }}</td>
+        <td>{{ lesson.final_grade.subject_name }}</td>
+        <td>{{ lesson.get_lesson_type_display }}</td>
+        <td>{{ lesson.mandatory|yesno:"Tak,Nie" }}</td>
+        <td>{{ lesson.additional_info }}</td>
+        <td>
+          <a href="{% url 'lesson_edit' lesson.pk %}" class="btn btn-sm btn-warning">Edytuj</a>
+          <a href="{% url 'lesson_delete' lesson.pk %}" class="btn btn-sm btn-danger">Usuń</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">Brak zajęć w tym dniu.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
