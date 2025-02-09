@@ -1,4 +1,71 @@
-﻿body.light-theme {
+﻿@media (max-width: 991px) {
+    #main-container {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .grades-table {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .grades-summary h5 {
+    font-size: 1.1rem;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .grades-table th,
+  .grades-table td {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+
+  .navbar-brand {
+    font-size: 1rem;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+body.light-theme {
     background-color: #f0f0f0;
     color: #212529;
 }
@@ -172,4 +239,3 @@ body.dark-theme .card-title {
     color: #fff !important;
     border-color: #495057 !important;
 }
-

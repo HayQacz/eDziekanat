@@ -21,7 +21,10 @@
             {{ form.row_color.label_tag }}<br>
             {{ form.row_color }}
         </div>
-        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+         <div class="form-group">
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+            <a href="{% url 'grades' %}" class="btn btn-secondary">Anuluj</a>
+        </div>
     </form>
 </div>
 {% endblock %}

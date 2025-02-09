@@ -1,82 +1,80 @@
 ﻿{% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Oceny</h2>
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered text-center grades-table">
-                    <thead>
-                        <tr>
-                            <th>Nazwa przedmiotu</th>
-                            <th>Forma zajęć</th>
-                            <th>Waga</th>
-                            <th>Pierwszy termin</th>
-                            <th>Drugi termin</th>
-                            <th>Trzeci termin</th>
-                            <th>ECTS</th>
-                            <th>Akcje</th>
+<h2 class="mb-4 text-center">Oceny</h2>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center grades-table">
+                <thead>
+                    <tr>
+                        <th>Nazwa przedmiotu</th>
+                        <th>Forma zajęć</th>
+                        <th>Waga</th>
+                        <th>Pierwszy termin</th>
+                        <th>Drugi termin</th>
+                        <th>Trzeci termin</th>
+                        <th>ECTS</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fg in final_grades %}
+                        <tr class="final-grade-row {% if not fg.row_color %}default-final-grade-row{% endif %}" {% if fg.row_color %}style="background-color: {{ fg.row_color }};"{% endif %}>
+                            <td>{{ fg.subject_name }}</td>
+                            <td>Ocena końcowa</td>
+                            <td>1.0</td>
+                            <td colspan="3">{{ fg.final_value }}</td>
+                            <td>{{ fg.ects }}</td>
+                            <td>
+                                <a href="{% url 'edit_final_grade' fg.id %}" class="btn btn-sm btn-warning">🎨 Zmień kolor</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for fg in final_grades %}
-                            <tr class="final-grade-row {% if not fg.row_color %}default-final-grade-row{% endif %}" {% if fg.row_color %}style="background-color: {{ fg.row_color }};"{% endif %}>
+                        {% for pg in fg.partialgrade_set.all %}
+                            <tr>
                                 <td>{{ fg.subject_name }}</td>
-                                <td>Ocena końcowa</td>
-                                <td>1.0</td>
-                                <td colspan="3">{{ fg.final_value }}</td>
-                                <td>{{ fg.ects }}</td>
+                                <td>{{ pg.get_form_display }}</td>
+                                <td>{{ pg.weight }}</td>
+                                <td>{{ pg.attempt1 }}</td>
+                                <td>{{ pg.attempt2 }}</td>
+                                <td>{{ pg.attempt3 }}</td>
+                                <td></td>
                                 <td>
-                                    <a href="{% url 'edit_final_grade' fg.id %}" class="btn btn-sm btn-warning">🎨 Zmień kolor</a>
+                                    <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
+                                    <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
                                 </td>
-                            </tr>
-                            {% for pg in fg.partialgrade_set.all %}
-                                <tr>
-                                    <td>{{ fg.subject_name }}</td>
-                                    <td>{{ pg.get_form_display }}</td>
-                                    <td>{{ pg.weight }}</td>
-                                    <td>{{ pg.attempt1 }}</td>
-                                    <td>{{ pg.attempt2 }}</td>
-                                    <td>{{ pg.attempt3 }}</td>
-                                    <td></td>
-                                    <td>
-                                        <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
-                                        <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            {% if fg.weight_sum < 1.0 %}
-                            <tr>
-                                <td colspan="8" class="text-center">
-                                    <a href="{% url 'add_partial_grade' fg.id %}" class="btn btn-success btn-sm">
-                                        <i class="fas fa-plus"></i> Dodaj ocenę cząstkową
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endif %}
-                        {% empty %}
-                            <tr>
-                                <td colspan="8" class="text-center">Brak ocen.</td>
                             </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        {% if fg.weight_sum < 1.0 %}
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                <a href="{% url 'add_partial_grade' fg.id %}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-plus"></i> Dodaj ocenę cząstkową
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Brak ocen.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-    <div class="text-center my-3">
-        <a href="{% url 'add_combined_grade' %}" class="btn btn-success btn-lg">
-            <i class="fas fa-plus"></i> Dodaj ocenę dla nowego przedmiotu
-        </a>
-    </div>
-    <div class="alert alert-info grades-summary text-center">
-        <h5>Podsumowanie</h5>
-        <p>Średnia zwykła: <span id="simple-average">{{ simple_avg }}</span></p>
-        <p>Średnia ważona: <span id="weighted-average">{{ weighted_avg }}</span></p>
-        <p>Łączna liczba ECTS: <span id="total-ects">{{ request.user.total_ects }}</span></p>
-        {% if final_grades %}
-            <p>Maksymalna liczba ECTS: <span>{{ request.user.max_possible_ects }}</span></p>
-        {% endif %}
-    </div>
+</div>
+<div class="text-center my-3">
+    <a href="{% url 'add_combined_grade' %}" class="btn btn-success btn-lg">
+        <i class="fas fa-plus"></i> Dodaj ocenę dla nowego przedmiotu
+    </a>
+</div>
+<div class="alert alert-info grades-summary text-center">
+    <h5>Podsumowanie</h5>
+    <p>Średnia zwykła: <span id="simple-average">{{ simple_avg }}</span></p>
+    <p>Średnia ważona: <span id="weighted-average">{{ weighted_avg }}</span></p>
+    <p>Łączna liczba ECTS: <span id="total-ects">{{ request.user.total_ects }}</span></p>
+    {% if final_grades %}
+        <p>Maksymalna liczba ECTS: <span>{{ request.user.max_possible_ects }}</span></p>
+    {% endif %}
 </div>
 {% endblock %}
