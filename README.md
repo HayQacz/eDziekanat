@@ -10,9 +10,6 @@ Strona Edziekanatu to aplikacja webowa stworzona w Django, która umożliwia stu
   - [Plan zajęć](#plan-zajęć)
   - [Inne funkcjonalności](#inne-funkcjonalności)
 - [Wymagania](#wymagania)
-- [Instalacja i uruchomienie](#instalacja-i-uruchomienie)
-- [Struktura projektu](#struktura-projektu)
-- [Technologie](#technologie)
 
 ## Funkcjonalności
 
