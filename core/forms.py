@@ -142,7 +142,7 @@ class FinalGradeEditForm(forms.ModelForm):
 class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['final_grade', 'date', 'start_time', 'end_time', 'lesson_type', 'mandatory', 'additional_info', 'group']
+        fields = ['final_grade', 'date', 'start_time', 'end_time', 'lesson_type', 'mandatory', 'additional_info', 'group', 'room']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
@@ -175,6 +175,7 @@ class BulkLessonForm(forms.Form):
     mandatory = forms.BooleanField(initial=True, required=False, label="Obowiązkowe")
     additional_info = forms.CharField(widget=forms.Textarea, required=False, label="Dodatkowe informacje")
     group = forms.CharField(max_length=2, label="Grupa")
+    room = forms.CharField(max_length=3, label="Sala")
     every_two_weeks = forms.BooleanField(required=False, label="Co dwa tygodnie")
 
     def __init__(self, *args, **kwargs):

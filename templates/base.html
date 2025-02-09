@@ -28,7 +28,7 @@
              <div class="nav-item">
                  <div class="custom-control custom-switch mt-2 mr-2">
                      <input type="checkbox" class="custom-control-input" id="themeSwitch">
-                     <label class="custom-control-label" for="themeSwitch">Dark Mode</label>
+                     <label class="custom-control-label darkmode-label" for="themeSwitch">Dark Mode</label>
                  </div>
              </div>
              <a class="nav-item nav-link btn btn-danger text-white" href="{% url 'logout' %}">
@@ -38,11 +38,9 @@
       </div>
     </nav>
     {% endblock %}
-
     <div class="container mt-4">
         {% block content %}{% endblock %}
     </div>
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{% static 'js/theme.js' %}"></script>
     {% block scripts %}{% endblock %}

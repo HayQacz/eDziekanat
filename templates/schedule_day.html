@@ -1,56 +1,54 @@
-﻿{% extends "base.html" %}
+﻿{% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Zajęcia na dzień: {{ day_date|date:"l, d.m.Y" }}</h2>
-  <div class="card shadow-sm">
-    <div class="card-body">
-      {% if lessons %}
-      <table class="table table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>Godzina</th>
-            <th>Przedmiot</th>
-            <th>Forma</th>
-            <th>Obowiązkowe</th>
-            <th>Informacje</th>
-            <th>Akcje</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for lesson in lessons %}
-          <tr>
-            <td>
-              {{ lesson.start_time|time:"H:i" }}<br>
-              <small class="text-muted">{{ lesson.end_time|time:"H:i" }}</small>
-            </td>
-            <td>{{ lesson.final_grade.subject_name }}</td>
-            <td>{{ lesson.get_lesson_type_display }}</td>
-            <td>{{ lesson.mandatory|yesno:"Tak,Nie" }}</td>
-            <td>{{ lesson.additional_info }}</td>
-            <td>
-              <a href="{% url 'lesson_edit' lesson.pk %}" class="btn btn-sm btn-warning" title="Edytuj">
-                <i class="fas fa-edit"></i>
-              </a>
-              <a href="{% url 'lesson_delete' lesson.pk %}" class="btn btn-sm btn-danger" title="Usuń">
-                <i class="fas fa-trash"></i>
-              </a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p class="text-muted text-center">Brak zajęć w tym dniu.</p>
-      {% endif %}
+    <h2 class="text-center mb-4">Zajęcia na dzień: {{ day_date|date:"l, d.m.Y" }}</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped text-center schedule-day-table">
+                <thead>
+                    <tr>
+                        <th>Godzina</th>
+                        <th>Przedmiot</th>
+                        <th>Sala</th>
+                        <th>Forma</th>
+                        <th>Obowiązkowe</th>
+                        <th>Informacje</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lesson in lessons %}
+                        <tr>
+                            <td>
+                                {{ lesson.start_time|time:"H:i" }}<br>
+                                <small>{{ lesson.end_time|time:"H:i" }}</small>
+                            </td>
+                            <td>{{ lesson.final_grade.subject_name }}</td>
+                            <td>{{ lesson.room }}</td>
+                            <td>{{ lesson.get_lesson_type_display }}</td>
+                            <td>{{ lesson.mandatory|yesno:"Tak,Nie" }}</td>
+                            <td>{{ lesson.additional_info }}</td>
+                            <td>
+                                <a href="{% url 'lesson_edit' lesson.pk %}" class="btn btn-sm btn-warning" title="Edytuj">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'lesson_delete' lesson.pk %}" class="btn btn-sm btn-danger" title="Usuń">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
-  <div class="text-center mt-4">
-    <a href="{% url 'lesson_add' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-success">
-      <i class="fas fa-plus"></i> Dodaj zajęcia
-    </a>
-    <a href="{% url 'schedule_week' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-secondary ml-2">
-      <i class="fas fa-arrow-left"></i> Powrót do tygodnia
-    </a>
-  </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'lesson_add' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Dodaj zajęcia
+        </a>
+        <a href="{% url 'schedule_week' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-secondary ml-2">
+            <i class="fas fa-arrow-left"></i> Powrót do tygodnia
+        </a>
+    </div>
 </div>
 {% endblock %}

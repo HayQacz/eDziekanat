@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import RegexValidator
 
 GRADE_CHOICES = [
     ('', '-----'),
@@ -42,6 +43,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.index_number}) - Semestr: {self.semester}, Grupa: {self.semester_group}"
+
 
 class FinalGrade(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -123,6 +125,7 @@ class FinalGrade(models.Model):
             self.final_value = ''
         self.save()
 
+
 class PartialGrade(models.Model):
     final_grade = models.ForeignKey(FinalGrade, on_delete=models.CASCADE)
     form = models.CharField(max_length=20, choices=FORM_CHOICES)
@@ -149,14 +152,18 @@ class PartialGrade(models.Model):
     def __str__(self):
         return f"{self.get_form_display()} - Waga: {self.weight}"
 
+
+
+
 LESSON_TYPE_CHOICES = [
-    ('wykład', 'Wykład'),
+    ('wyklad', 'Wykład'),
     ('laboratoria', 'Laboratoria'),
     ('audytoria', 'Audytoria'),
     ('kolokwium', 'Kolokwium'),
     ('kolokwium poprawkowe', 'Kolokwium poprawkowe'),
     ('zaliczenie', 'Zaliczenie'),
     ('zaliczenie poprawkowe', 'Zaliczenie poprawkowe'),
+    ('odwolane', 'Odwołane'),
 ]
 
 class Lesson(models.Model):
@@ -168,6 +175,11 @@ class Lesson(models.Model):
     mandatory = models.BooleanField(default=True, help_text="Czy zajęcia są obowiązkowe")
     additional_info = models.TextField(blank=True, help_text="Dodatkowe informacje")
     group = models.CharField(max_length=2, help_text="Grupa, dwucyfrowy kod")
+    room = models.CharField(
+        max_length=3,
+        help_text="Sala (3-cyfrowa)",
+        validators=[RegexValidator(regex=r'^\d{3}$', message='Podaj 3-cyfrową salę')]
+    )
 
     def __str__(self):
-        return f"{self.final_grade.subject_name} - {self.get_lesson_type_display()} w dniu {self.date} ({self.start_time}-{self.end_time})"
+        return f"{self.final_grade.subject_name} - {self.get_lesson_type_display()} w dniu {self.date} ({self.start_time}-{self.end_time}) - Sala: {self.room}"

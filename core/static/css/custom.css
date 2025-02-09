@@ -19,18 +19,56 @@ body.dark-theme li,
 body.dark-theme span,
 body.dark-theme a,
 body.dark-theme label,
-body.dark-theme .form-control,
-body.dark-theme .card,
-body.dark-theme .list-group-item {
+body.dark-theme .form-control {
     color: #f8f9fa !important;
-    background-color: transparent;
 }
 
-body.dark-theme a {
-    color: #f8f9fa;
+.custom-control-label.darkmode-label {
+    color: #ffffff !important;
 }
-body.dark-theme a:hover {
-    color: #ffffff;
+
+body.dark-theme .card {
+    background-color: #343a40;
+}
+body.dark-theme .list-group-item {
+    background-color: #343a40;
+}
+
+body.dark-theme table,
+body.dark-theme th,
+body.dark-theme td {
+    background-color: transparent;
+    color: #f8f9fa !important;
+}
+body.light-theme table,
+body.light-theme th,
+body.light-theme td {
+    color: #212529 !important;
+}
+
+.grades-table thead {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+.grades-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+.grades-table th,
+.grades-table td {
+    border-radius: 5px;
+}
+
+body.dark-theme .default-final-grade-row {
+    background-color: #343a40 !important;
+}
+body.light-theme .default-final-grade-row {
+    background-color: #ffffff !important;
+}
+
+.final-grade-row {
+    font-weight: bold;
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -38,13 +76,6 @@ body.dark-theme a:hover {
 }
 .navbar-dark .navbar-nav .nav-link:hover {
     color: #ffffff;
-}
-
-body.dark-theme table,
-body.dark-theme th,
-body.dark-theme td {
-    color: #f8f9fa !important;
-    background-color: transparent;
 }
 
 body.dark-theme select.form-control {
@@ -76,15 +107,57 @@ body.dark-theme .btn-danger {
     color: #ffffff;
 }
 
-.final-grade-row {
-    color: #000000 !important;
-    font-weight: bold !important;
+.dark-theme .lesson-badge {
+    color: white;
+}
+.light-theme .lesson-badge {
+    color: black;
 }
 
-.alert {
-    color: #000000;
-}
-body.dark-theme .alert,
-body.dark-theme .alert * {
+body.light-theme .lesson-room {
     color: #000000 !important;
+}
+body.dark-theme .lesson-room {
+    color: #ffffff !important;
+}
+
+body.light-theme a.details-link {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    color: #000 !important;
+}
+body.dark-theme a.details-link {
+    background-color: #343a40 !important;
+    border: 1px solid #343a40 !important;
+    color: #fff !important;
+}
+
+.grades-summary {
+    color: #000 !important;
+}
+
+.lesson-subject.lesson-type-wyklad {
+    color: #007bff !important;
+}
+.lesson-subject.lesson-type-laboratoria {
+    color: #28a745 !important;
+}
+.lesson-subject.lesson-type-audytoria {
+    color: #17a2b8 !important;
+}
+.lesson-subject.lesson-type-kolokwium {
+    color: #ffc107 !important;
+}
+.lesson-subject.lesson-type-kolokwium-poprawkowe {
+    color: #fd7e14 !important;
+}
+.lesson-subject.lesson-type-zaliczenie {
+    color: #6f42c1 !important;
+}
+.lesson-subject.lesson-type-zaliczenie-poprawkowe {
+    color: #e83e8c !important;
+}
+.lesson-subject.lesson-type-odwolane {
+    color: #dc3545 !important;
+    text-decoration: line-through;
 }

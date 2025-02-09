@@ -1,66 +1,89 @@
-﻿{% extends "base.html" %}
+﻿{% extends 'base.html' %}
 {% load dict_extras %}
 {% block content %}
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Plan zajęć: {{ start_of_week|date:"d.m.Y" }} - {{ end_of_week|date:"d.m.Y" }}</h2>
-  <div class="d-flex justify-content-between mb-3">
-      <a href="{% url 'schedule_week' %}?date={{ previous_week|date:'Y-m-d' }}" class="btn btn-outline-primary">
-        <i class="fas fa-arrow-left"></i> Poprzedni tydzień
-      </a>
-      <a href="{% url 'schedule_week' %}?date={{ next_week|date:'Y-m-d' }}" class="btn btn-outline-primary">
-        Następny tydzień <i class="fas fa-arrow-right"></i>
-      </a>
-  </div>
-  <div class="row">
-    {% for day in week_dates %}
-      <div class="col-md-12 mb-3">
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">{{ day|date:"l, d.m.Y" }}</h5>
-            <a href="{% url 'schedule_day' day=day|date:'Y-m-d' %}" class="btn btn-light btn-sm">Szczegóły</a>
-          </div>
-          <div class="card-body">
-            {% with lessons=lessons_by_day|dict_get:forloop.counter0 %}
-              {% if lessons %}
-                <ul class="list-group list-group-flush">
-                  {% for lesson in lessons %}
-                    <li class="list-group-item">
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <strong>{{ lesson.final_grade.subject_name }}</strong>
-                          <small class="text-muted">({{ lesson.get_lesson_type_display }})</small>
-                        </div>
-                        <div>
-                          <span class="badge badge-info">
-                            {{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}
-                          </span>
-                        </div>
-                      </div>
-                      {% if lesson.additional_info %}
-                        <p class="mb-0 text-secondary"><small>{{ lesson.additional_info }}</small></p>
-                      {% endif %}
-                    </li>
-                  {% endfor %}
-                </ul>
-              {% else %}
-                <p class="text-muted">Brak zajęć w tym dniu.</p>
-              {% endif %}
-            {% endwith %}
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-  <div class="text-center mt-4">
-    <a href="{% url 'lesson_add' %}" class="btn btn-success">
-      <i class="fas fa-plus"></i> Dodaj zajęcia
-    </a>
-    <a href="{% url 'bulk_lesson_add' %}" class="btn btn-info ml-2">
-      <i class="fas fa-layer-group"></i> Dodaj zbiorowo zajęcia
-    </a>
-    <a href="{% url 'bulk_lesson_delete' %}" class="btn btn-danger ml-2">
-      <i class="fas fa-trash-alt"></i> Usuń zbiorowo zajęcia
-    </a>
-  </div>
+    <h2 class="text-center mb-4">Plan zajęć: {{ start_of_week|date:"d.m.Y" }} - {{ end_of_week|date:"d.m.Y" }}</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{% url 'schedule_week' %}?date={{ previous_week|date:'Y-m-d' }}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> Poprzedni tydzień
+        </a>
+        <a href="{% url 'schedule_week' %}?date={{ next_week|date:'Y-m-d' }}" class="btn btn-outline-primary">
+            Następny tydzień <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    <div class="row">
+        {% for day in week_dates %}
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">{{ day|date:"l, d.m.Y" }}</h5>
+                        <a href="{% url 'schedule_day' day=day|date:'Y-m-d' %}" class="btn btn-light btn-sm details-link">Szczegóły</a>
+                    </div>
+                    <div class="card-body">
+                        {% with lessons=lessons_by_day|dict_get:forloop.counter0 %}
+                            {% if lessons %}
+                                <ul class="list-group list-group-flush">
+                                    {% for lesson in lessons %}
+                                        <li class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <span class="lesson-subject lesson-type-{{ lesson.lesson_type|slugify }}">
+                                                        {{ lesson.final_grade.subject_name }}
+                                                    </span>
+                                                    <small class="text-muted">({{ lesson.get_lesson_type_display }})</small>
+                                                    <br>
+                                                    <span class="lesson-room">Sala: {{ lesson.room }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="badge lesson-badge" style="border: 2px solid
+                                                        {% if lesson.lesson_type == 'wyklad' %}
+                                                            #007bff
+                                                        {% elif lesson.lesson_type == 'laboratoria' %}
+                                                            #28a745
+                                                        {% elif lesson.lesson_type == 'audytoria' %}
+                                                            #17a2b8
+                                                        {% elif lesson.lesson_type == 'kolokwium' %}
+                                                            #ffc107
+                                                        {% elif lesson.lesson_type == 'kolokwium poprawkowe' %}
+                                                            #fd7e14
+                                                        {% elif lesson.lesson_type == 'zaliczenie' %}
+                                                            #6f42c1
+                                                        {% elif lesson.lesson_type == 'zaliczenie poprawkowe' %}
+                                                            #e83e8c
+                                                        {% elif lesson.lesson_type == 'odwolane' %}
+                                                            #dc3545
+                                                        {% else %}
+                                                            inherit
+                                                        {% endif %}; padding: 5px;">
+                                                        {{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {% if lesson.additional_info %}
+                                                <p class="mb-0"><small>{{ lesson.additional_info }}</small></p>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">Brak zajęć w tym dniu.</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'lesson_add' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Dodaj zajęcia
+        </a>
+        <a href="{% url 'bulk_lesson_add' %}" class="btn btn-info ml-2">
+            <i class="fas fa-layer-group"></i> Dodaj zbiorowo zajęcia
+        </a>
+        <a href="{% url 'bulk_lesson_delete' %}" class="btn btn-danger ml-2">
+            <i class="fas fa-trash-alt"></i> Usuń zbiorowo zajęcia
+        </a>
+    </div>
 </div>
 {% endblock %}
