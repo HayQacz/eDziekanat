@@ -1,3 +1,4 @@
+import os
 """
 Django settings for eDziekanat_project project.
 
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'pwa'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,26 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "core" / "static",
 ]
+
+PWA_APP_NAME = "eDziekanat"
+PWA_APP_DESCRIPTION = "Aplikacja do zarządzania informacjami studenckimi"
+PWA_APP_THEME_COLOR = "#007bff"
+PWA_APP_BACKGROUND_COLOR = "#ffffff"
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/images/icon.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/images/apple-icon.png',
+        'sizes': '160x160'
+    }
+]
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')
+
