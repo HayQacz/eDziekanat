@@ -14,16 +14,24 @@ Strona Edziekanatu to aplikacja webowa stworzona w Django, umożliwiająca stude
   - Responsywny interfejs oparty o Bootstrap.
   - Przełącznik Dark/Light mode dostępny w pasku nawigacyjnym.
   - Dedykowane style dla ciemnego motywu.
-![image](https://github.com/user-attachments/assets/60c8c799-bb0b-422d-837f-e23c444ebbe6)
-![image](https://github.com/user-attachments/assets/6ce4d21c-1be9-4a8a-946e-e39e9f0965fb)
-![image](https://github.com/user-attachments/assets/cbb363d5-8c31-497f-91ed-587d0390ed6e)
+![image](https://github.com/user-attachments/assets/0b934085-3b5d-474f-8f1f-bf43644b8043)
+![image](https://github.com/user-attachments/assets/a7c6fc5f-21d6-44e9-a32b-e9038b2e30d0)
+![image](https://github.com/user-attachments/assets/a9eb7292-3042-4d6d-bd82-5a9b6331c406)
 
+
+-**Plan zajęć:**
+  -W pełni responsywny plan zajęć. 
+  -Funkcjonalność grupowa - użytkownik z przypisaną daną grupą będzie widział plan zajęć
+  -Funkcja dodawania pojedynczo jak i zbiorowo zajęć. Dodana również została możliwość zbiorowego usuwania zajęć.
+  -Możliwość wejścia w widok poszczególnych dni zajęć - możliwość edycji i usunięcia poszczególnych zajęć dla całej grupy. 
+![image](https://github.com/user-attachments/assets/bfd7cd18-0e2f-4d6b-bb75-d721fbdec299)
+![image](https://github.com/user-attachments/assets/8e36a87a-d2f0-41b4-8ab5-b1f9230d9f49)
+![image](https://github.com/user-attachments/assets/273675f2-ae67-4822-a3c7-259a0021c7ac)
 
 
 - **Inne funkcjonalności:**
   - Strona logowania. 
   - Strona główna z aktualnościami (placeholder).
-  - Ekran rozkładu zajęć (placeholder).
 
 ## Wymagania
 - Python 3.8 lub nowszy
