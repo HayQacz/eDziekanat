@@ -4,6 +4,11 @@
     <h2>Edycja oceny końcowej</h2>
     <form method="post">
         {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
         <div class="mb-3">
             {{ form.subject_name.label_tag }}<br>
             {{ form.subject_name }}
@@ -15,10 +20,6 @@
         <div class="mb-3">
             {{ form.row_color.label_tag }}<br>
             {{ form.row_color }}
-        </div>
-        <h4>Przypisane oceny cząstkowe</h4>
-        <div class="mb-3">
-            {{ form.partial_grades }}
         </div>
         <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
     </form>

@@ -4,6 +4,11 @@
     <h2>Dodaj ocenę cząstkową dla przedmiotu: {{ final_grade.subject_name }}</h2>
     <form method="post">
         {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-success">Dodaj ocenę</button>
     </form>

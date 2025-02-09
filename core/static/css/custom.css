@@ -12,18 +12,20 @@ body.dark-theme h1,
 body.dark-theme h2,
 body.dark-theme h3,
 body.dark-theme h4,
-body.dark-theme h5,
 body.dark-theme h6,
-body.dark-theme p,
 body.dark-theme li,
 body.dark-theme span,
 body.dark-theme a,
 body.dark-theme label,
 body.dark-theme .form-control {
-    color: #f8f9fa !important;
+    color: #f8f9fa;
+}
+body.dark-theme h5,
+body.dark-theme p {
+    color: #212529;
 }
 
-.custom-control-label.darkmode-label {
+.custom-control-label.dark-theme-label {
     color: #ffffff !important;
 }
 
@@ -131,11 +133,6 @@ body.dark-theme a.details-link {
     border: 1px solid #343a40 !important;
     color: #fff !important;
 }
-
-.grades-summary {
-    color: #000 !important;
-}
-
 .lesson-subject.lesson-type-wyklad {
     color: #007bff !important;
 }
@@ -161,3 +158,18 @@ body.dark-theme a.details-link {
     color: #dc3545 !important;
     text-decoration: line-through;
 }
+body.dark-theme .grades-summary,
+body.dark-theme .grades-summary * {
+    color: #000 !important;
+}
+body.dark-theme .card-title {
+    color: #ffffff !important;
+}
+.dark-theme input.form-control,
+.dark-theme textarea.form-control,
+.dark-theme select.form-control {
+    background-color: #343a40 !important;
+    color: #fff !important;
+    border-color: #495057 !important;
+}
+

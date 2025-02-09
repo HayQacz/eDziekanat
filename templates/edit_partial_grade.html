@@ -4,8 +4,32 @@
     <h2>Edycja oceny cząstkowej</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Zapisz zmiany</button>
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+        <div class="mb-3">
+            {{ form.form.label_tag }}<br>
+            {{ form.form }}
+        </div>
+        <div class="mb-3">
+            {{ form.weight.label_tag }}<br>
+            {{ form.weight }}
+        </div>
+        <div class="mb-3">
+            {{ form.attempt1.label_tag }}<br>
+            {{ form.attempt1 }}
+        </div>
+        <div class="mb-3">
+            {{ form.attempt2.label_tag }}<br>
+            {{ form.attempt2 }}
+        </div>
+        <div class="mb-3">
+            {{ form.attempt3.label_tag }}<br>
+            {{ form.attempt3 }}
+        </div>
+        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
     </form>
 </div>
 {% endblock %}

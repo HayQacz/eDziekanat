@@ -145,6 +145,7 @@ def add_combined_grade(request):
     else:
         form = CombinedGradeForm()
     return render(request, 'add_combined_grade.html', {'form': form})
+
 def custom_login(request):
     error_message = None
     if request.method == 'POST':
@@ -157,6 +158,7 @@ def custom_login(request):
         else:
             error_message = "Nie udało się zalogować, błędny indeks lub hasło."
     return render(request, 'login.html', {'error_message': error_message})
+
 def schedule_week(request):
     date_str = request.GET.get('date')
     if date_str:

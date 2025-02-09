@@ -1,7 +1,7 @@
 ﻿from django.forms import CheckboxSelectMultiple
 from django import forms
 from django.db.models import Sum
-from .models import PartialGrade, FinalGrade, FORM_CHOICES, GRADE_CHOICES, Lesson,  LESSON_TYPE_CHOICES
+from .models import PartialGrade, FinalGrade, FORM_CHOICES, GRADE_CHOICES, Lesson, LESSON_TYPE_CHOICES
 
 
 class PartialGradeForm(forms.ModelForm):
@@ -139,6 +139,8 @@ class FinalGradeEditForm(forms.ModelForm):
                         pg.final_grade = instance
                         pg.save()
         return instance
+
+
 class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
@@ -183,6 +185,7 @@ class BulkLessonForm(forms.Form):
         super(BulkLessonForm, self).__init__(*args, **kwargs)
         if user:
             self.fields['final_grade'].queryset = user.finalgrade_set.all()
+
 
 class BulkLessonDeleteForm(forms.Form):
     final_grade = forms.ModelChoiceField(queryset=FinalGrade.objects.none(), label="Przedmiot")
