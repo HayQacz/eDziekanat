@@ -75,37 +75,63 @@ class FinalGrade(models.Model):
             self.final_value = ''
             self.save()
             return
+
+        latest_grade = None
+        latest_attempt = None
+        latest_pg = None
+
         for pg in partials:
-            if not (pg.attempt1 or pg.attempt2 or pg.attempt3):
-                self.final_value = ''
-                self.save()
-                return
-        for pg in partials:
-            if pg.attempt1 == 'zal' or pg.attempt2 == 'zal' or pg.attempt3 == 'zal':
+            if pg.attempt3:
+                latest_grade = pg.attempt3
+                latest_attempt = 'attempt3'
+                latest_pg = pg
+            elif pg.attempt2:
+                latest_grade = pg.attempt2
+                latest_attempt = 'attempt2'
+                latest_pg = pg
+            elif pg.attempt1:
+                latest_grade = pg.attempt1
+                latest_attempt = 'attempt1'
+                latest_pg = pg
+
+            if latest_grade == 'zal':
                 self.final_value = 'zal'
                 self.save()
                 return
-        for pg in partials:
-            if pg.attempt1 == '2.0' or pg.attempt2 == '2.0' or pg.attempt3 == '2.0':
-                self.final_value = '2.0'
-                self.save()
-                return
+
+        if not latest_grade:
+            self.final_value = ''
+            self.save()
+            return
+
+        if latest_grade == '2.0' or (
+                latest_attempt == 'attempt2' and not partials.filter(attempt3__isnull=False).exists()
+        ) or (
+                latest_attempt == 'attempt1' and not partials.filter(attempt2__isnull=False).exists()
+        ):
+            self.final_value = '2.0'
+            self.save()
+            return
+
         valid_partials = [pg for pg in partials if (pg.attempt1 or pg.attempt2 or pg.attempt3)]
+
         total_weight_sum = sum(pg.weight for pg in valid_partials)
         if abs(total_weight_sum - 1.0) > 0.001:
             self.final_value = ''
             self.save()
             return
+
         total_weight = 0.0
         weighted_sum = 0.0
         for pg in valid_partials:
             grade_value = None
-            if pg.attempt1:
-                grade_value = pg.attempt1
-            elif pg.attempt2:
-                grade_value = pg.attempt2
-            elif pg.attempt3:
+            if pg.attempt3 and pg == latest_pg:
                 grade_value = pg.attempt3
+            elif pg.attempt2 and pg == latest_pg:
+                grade_value = pg.attempt2
+            elif pg.attempt1 and pg == latest_pg:
+                grade_value = pg.attempt1
+
             if grade_value and grade_value != 'zal':
                 try:
                     numeric_grade = float(grade_value)
@@ -113,6 +139,7 @@ class FinalGrade(models.Model):
                     numeric_grade = 0.0
                 weighted_sum += numeric_grade * pg.weight
                 total_weight += pg.weight
+
         if total_weight > 0:
             avg = weighted_sum / total_weight
             rounded_avg = round(avg * 2) / 2
@@ -123,6 +150,7 @@ class FinalGrade(models.Model):
             self.final_value = f"{rounded_avg:.1f}"
         else:
             self.final_value = ''
+
         self.save()
 
 

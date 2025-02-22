@@ -130,9 +130,7 @@ class FinalGradeEditForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super(FinalGradeEditForm, self).save(commit)
         selected = self.cleaned_data.get('partial_grades')
-        if not selected:
-            instance.delete()
-        else:
+        if selected:
             for pg in self.fields['partial_grades'].queryset:
                 if pg in selected:
                     if pg.final_grade != instance:
