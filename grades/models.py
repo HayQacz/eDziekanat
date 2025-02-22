@@ -1,6 +1,5 @@
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.core.validators import RegexValidator
+﻿from django.db import models
+from users.models import CustomUser
 
 GRADE_CHOICES = [
     ('', '-----'),
@@ -18,32 +17,6 @@ FORM_CHOICES = [
     ('laboratoria', 'Laboratoria'),
     ('wyklad', 'Wykład'),
 ]
-
-class CustomUser(AbstractUser):
-    index_number = models.CharField(max_length=7, unique=True, help_text="np. AB12345")
-    semester = models.PositiveIntegerField(help_text="Aktualny semestr (np. 1, 2, 3, ...)")
-    study_major = models.CharField(max_length=100, help_text="Kierunek studiów")
-    semester_group = models.CharField(max_length=2, help_text="Dwucyfrowy kod grupy (np. 10, 21)")
-
-    @property
-    def total_ects(self):
-        total = 0
-        for fg in self.finalgrade_set.all():
-            if fg.final_value and fg.final_value not in ('', 'zal'):
-                try:
-                    if float(fg.final_value) > 2.0:
-                        total += fg.ects
-                except ValueError:
-                    pass
-        return total
-
-    @property
-    def max_possible_ects(self):
-        return sum(fg.ects for fg in self.finalgrade_set.all())
-
-    def __str__(self):
-        return f"{self.username} ({self.index_number}) - Semestr: {self.semester}, Grupa: {self.semester_group}"
-
 
 class FinalGrade(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -179,35 +152,3 @@ class PartialGrade(models.Model):
 
     def __str__(self):
         return f"{self.get_form_display()} - Waga: {self.weight}"
-
-
-
-
-LESSON_TYPE_CHOICES = [
-    ('wyklad', 'Wykład'),
-    ('laboratoria', 'Laboratoria'),
-    ('audytoria', 'Audytoria'),
-    ('kolokwium', 'Kolokwium'),
-    ('kolokwium poprawkowe', 'Kolokwium poprawkowe'),
-    ('zaliczenie', 'Zaliczenie'),
-    ('zaliczenie poprawkowe', 'Zaliczenie poprawkowe'),
-    ('odwolane', 'Odwołane'),
-]
-
-class Lesson(models.Model):
-    final_grade = models.ForeignKey(FinalGrade, on_delete=models.CASCADE, help_text="Przedmiot (ocena) dla zajęć")
-    date = models.DateField(help_text="Data zajęć")
-    start_time = models.TimeField(help_text="Godzina rozpoczęcia")
-    end_time = models.TimeField(help_text="Godzina zakończenia")
-    lesson_type = models.CharField(max_length=30, choices=LESSON_TYPE_CHOICES, help_text="Forma zajęć")
-    mandatory = models.BooleanField(default=True, help_text="Czy zajęcia są obowiązkowe")
-    additional_info = models.TextField(blank=True, help_text="Dodatkowe informacje")
-    group = models.CharField(max_length=2, help_text="Grupa, dwucyfrowy kod")
-    room = models.CharField(
-        max_length=3,
-        help_text="Sala (3-cyfrowa)",
-        validators=[RegexValidator(regex=r'^\d{3}$', message='Podaj 3-cyfrową salę')]
-    )
-
-    def __str__(self):
-        return f"{self.final_grade.subject_name} - {self.get_lesson_type_display()} w dniu {self.date} ({self.start_time}-{self.end_time}) - Sala: {self.room}"

@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core.apps.CoreConfig',
-    'pwa'
+    'pwa',
+    'grades',
+    'schedule',
+    'users',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -126,14 +129,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "core" / "static",
+    BASE_DIR / "static",
 ]
 
 PWA_APP_NAME = "eDziekanat"

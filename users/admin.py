@@ -1,6 +1,7 @@
-from django.contrib import admin
+﻿from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, FinalGrade, PartialGrade
+from .models import CustomUser
+from grades.models import FinalGrade, PartialGrade
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
