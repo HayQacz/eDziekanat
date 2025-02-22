@@ -14,7 +14,9 @@
                         <th>Drugi termin</th>
                         <th>Trzeci termin</th>
                         <th>ECTS</th>
+                        {% if request.user.is_superuser %}
                         <th>Akcje</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -25,9 +27,11 @@
                             <td>1.0</td>
                             <td colspan="3">{{ fg.final_value }}</td>
                             <td>{{ fg.ects }}</td>
+                            {% if request.user.is_superuser %}
                             <td>
-                                <a href="{% url 'edit_final_grade' fg.id %}" class="btn btn-sm btn-warning">🎨 Zmień kolor</a>
+                                <a href="{% url 'edit_final_grade' fg.id %}" class="btn btn-sm btn-warning">Edytuj</a>
                             </td>
+                            {% endif %}
                         </tr>
                         {% for pg in fg.partialgrade_set.all %}
                             <tr>
@@ -38,18 +42,22 @@
                                 <td>{{ pg.attempt2 }}</td>
                                 <td>{{ pg.attempt3 }}</td>
                                 <td></td>
+                                {% if request.user.is_superuser %}
                                 <td>
-                                    <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">✏️</a>
-                                    <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">🗑</a>
+                                    <a href="{% url 'edit_partial_grade' pg.id %}" class="btn btn-sm btn-primary">Edytuj</a>
+                                    <a href="{% url 'delete_partial_grade' pg.id %}" class="btn btn-sm btn-danger">Usuń</a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         {% if fg.weight_sum < 1.0 %}
                         <tr>
                             <td colspan="8" class="text-center">
+                                {% if request.user.is_superuser %}
                                 <a href="{% url 'add_partial_grade' fg.id %}" class="btn btn-success btn-sm">
                                     <i class="fas fa-plus"></i> Dodaj ocenę cząstkową
                                 </a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endif %}
@@ -64,9 +72,11 @@
     </div>
 </div>
 <div class="text-center my-3">
+    {% if request.user.is_superuser %}
     <a href="{% url 'add_combined_grade' %}" class="btn btn-success btn-lg">
         <i class="fas fa-plus"></i> Dodaj ocenę dla nowego przedmiotu
     </a>
+    {% endif %}
 </div>
 <div class="alert alert-info grades-summary text-center">
     <h5>Podsumowanie</h5>

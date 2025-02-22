@@ -14,7 +14,9 @@
                             <th>Forma</th>
                             <th>Obowiązkowe</th>
                             <th>Informacje</th>
-                            <th>Akcje</th>
+                            {% if request.user.is_superuser %}
+                                <th>Akcje</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -29,6 +31,7 @@
                                 <td>{{ lesson.get_lesson_type_display }}</td>
                                 <td>{{ lesson.mandatory|yesno:"Tak,Nie" }}</td>
                                 <td>{{ lesson.additional_info }}</td>
+                                {% if request.user.is_superuser %}
                                 <td>
                                     <a href="{% url 'lesson_edit' lesson.pk %}" class="btn btn-sm btn-warning" title="Edytuj">
                                         <i class="fas fa-edit"></i>
@@ -37,6 +40,7 @@
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -45,9 +49,11 @@
         </div>
     </div>
     <div class="text-center mt-4">
+        {% if request.user.is_superuser %}
         <a href="{% url 'lesson_add' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Dodaj zajęcia
         </a>
+        {% endif %}
         <a href="{% url 'schedule_week' %}?date={{ day_date|date:'Y-m-d' }}" class="btn btn-secondary ml-2">
             <i class="fas fa-arrow-left"></i> Powrót do tygodnia
         </a>

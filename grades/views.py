@@ -1,5 +1,5 @@
 ﻿from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from grades.models import FinalGrade, PartialGrade
 from django.db.models import Sum
 from grades.forms import PartialGradeForm, FinalGradeECTSForm, CombinedGradeForm, FinalGradeEditForm
@@ -47,6 +47,8 @@ def update_color(request):
 
 @login_required
 def add_partial_grade(request, final_grade_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji ocen")
     final_grade = get_object_or_404(FinalGrade, id=final_grade_id, user=request.user)
     if request.method == 'POST':
         form = PartialGradeForm(request.POST, final_grade=final_grade)
@@ -65,6 +67,8 @@ def add_partial_grade(request, final_grade_id):
 
 @login_required
 def edit_partial_grade(request, partial_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji ocen")
     partial = get_object_or_404(PartialGrade, id=partial_id, final_grade__user=request.user)
     if request.method == 'POST':
         form = PartialGradeForm(request.POST, instance=partial, final_grade=partial.final_grade)
@@ -77,12 +81,16 @@ def edit_partial_grade(request, partial_id):
 
 @login_required
 def delete_partial_grade(request, partial_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji ocen")
     partial = get_object_or_404(PartialGrade, id=partial_id, final_grade__user=request.user)
     partial.delete()
     return redirect('grades')
 
 @login_required
 def set_ects(request, final_grade_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji ocen")
     final_grade = get_object_or_404(FinalGrade, id=final_grade_id, user=request.user)
     if request.method == 'POST':
         form = FinalGradeECTSForm(request.POST, instance=final_grade)
@@ -95,6 +103,8 @@ def set_ects(request, final_grade_id):
 
 @login_required
 def edit_final_grade(request, final_grade_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji ocen")
     final_grade = get_object_or_404(FinalGrade, id=final_grade_id, user=request.user)
     if request.method == 'POST':
         form = FinalGradeEditForm(request.POST, instance=final_grade, user=request.user)
@@ -107,6 +117,8 @@ def edit_final_grade(request, final_grade_id):
 
 @login_required
 def add_combined_grade(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji ocen")
     if request.method == 'POST':
         form = CombinedGradeForm(request.POST)
         if form.is_valid():

@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.http import HttpResponseForbidden
 
 @login_required
 def schedule(request):
@@ -81,6 +82,11 @@ class LessonCreateView(CreateView):
     template_name = 'schedule_form.html'
     success_url = reverse_lazy('schedule_week')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return HttpResponseForbidden("Brak uprawnień do dodawania zajęć")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -102,6 +108,11 @@ class LessonUpdateView(UpdateView):
     template_name = 'schedule_form.html'
     success_url = reverse_lazy('schedule_week')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return HttpResponseForbidden("Brak uprawnień do edytowania zajęć")
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -112,7 +123,14 @@ class LessonDeleteView(DeleteView):
     template_name = 'schedule_confirm_delete.html'
     success_url = reverse_lazy('schedule_week')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return HttpResponseForbidden("Brak uprawnień do usuwania zajęć")
+        return super().dispatch(request, *args, **kwargs)
+
 def bulk_lesson_add(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji planu zajęć")
     if request.method == 'POST':
         form = BulkLessonForm(request.POST, user=request.user)
         if form.is_valid():
@@ -156,6 +174,8 @@ def bulk_lesson_add(request):
 
 
 def bulk_lesson_delete(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Brak uprawnień do modyfikacji planu zajęć")
     if request.method == 'POST' and 'confirm' in request.POST:
         final_grade_id = request.POST.get('final_grade')
         lesson_type = request.POST.get('lesson_type')
